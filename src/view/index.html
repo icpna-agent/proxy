@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Proxy Meta</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=K2D:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                primary: '#3B82F6',
+                primaryHover: '#2563EB',
+                primaryActive: '#1D4ED8',
+              },
+              themeBg: {
+                default: '#F9FAFB',
+                surface: '#FFFFFF',
+                surfaceFloating: 'rgba(255, 255, 255, 0.85)',
+                banner: '#2563EB',
+              },
+              themeText: {
+                primary: '#111827',
+                secondary: '#6B7280',
+                tertiary: '#9CA3AF',
+                inverse: '#FFFFFF',
+              },
+              themeBorder: {
+                light: '#E5E7EB',
+                medium: '#D1D5DB',
+                focus: '#93C5FD',
+              },
+            },
+            fontFamily: {
+              display: ['K2D', 'sans-serif'],
+              body: ['Inter', 'sans-serif'],
+            },
+            boxShadow: {
+              sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+              md: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+              floating: '0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01)',
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body
+    class="bg-themeBg-default font-body text-themeText-primary antialiased min-h-screen flex flex-col text-[13px]"
+  >
+    <!-- Super Admin Navbar (Voiceflow Style) -->
+    <div
+      class="fixed top-0 inset-x-0 z-50 flex justify-center mt-6 px-4 lg:px-0 pointer-events-none"
+    >
+      <nav
+        class="pointer-events-auto bg-themeBg-surfaceFloating backdrop-blur-xl border border-white/40 shadow-floating rounded-full px-4 py-2 sm:px-6 sm:py-3 flex items-center justify-between gap-8 w-full max-w-5xl transition-all"
+      >
+        <div class="flex items-center gap-2">
+          <div
+            class="w-8 h-8 rounded-full bg-brand-primary flex items-center justify-center text-themeText-inverse shadow-sm"
+          >
+            <svg
+              class="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 10V3L4 14h7v7l9-11h-7z"
+              ></path>
+            </svg>
+          </div>
+          <span
+            class="font-display font-semibold text-base sm:text-lg tracking-tight text-themeText-primary"
+            >Proxy Meta</span
+          >
+        </div>
+        <div
+          class="hidden sm:flex items-center gap-6 text-sm font-medium text-themeText-secondary"
+        >
+          <a href="#" class="text-themeText-primary font-semibold">Enrutadores</a>
+        </div>
+        <div class="ml-auto">
+          <a
+            href="https://developers.facebook.com/apps/1071120708569067/webhooks/?business_id=1793146138173503"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center justify-center transition-all duration-200 cursor-pointer font-medium bg-themeText-primary hover:bg-gray-800 text-themeText-inverse shadow-sm text-xs rounded-full px-5 py-2.5"
+          >
+            Ir a Meta
+          </a>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Admin Main Content -->
+    <main
+      class="flex-1 max-w-5xl w-full mx-auto px-6 lg:px-2 pt-32 pb-10"
+    >
+      <!-- Page Header -->
+      <div
+        class="sm:flex sm:items-center sm:justify-between mb-8 pb-5 border-b border-themeBorder-light"
+      >
+        <div>
+          <h1 class="text-2xl font-bold font-display text-themeText-primary">
+            Reglas de Enrutamiento
+          </h1>
+          <p class="mt-2 text-xs text-themeText-secondary">
+            Administra las URLs a donde se redirigen los eventos de los números
+            de WhatsApp (Bots).
+          </p>
+        </div>
+        <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+          <button
+            onclick="openModal()"
+            class="inline-flex items-center justify-center transition-all duration-200 cursor-pointer font-body text-xs sm:text-sm font-medium leading-relaxed px-6 py-3 rounded-full bg-brand-primary hover:bg-brand-primaryHover active:bg-brand-primaryActive text-themeText-inverse shadow-md hover:-translate-y-[1px] active:translate-y-0"
+          >
+            <svg
+              class="-ml-1 mr-2 h-4 w-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 4v16m8-8H4"
+              ></path>
+            </svg>
+            Nuevo Enrutador
+          </button>
+        </div>
+      </div>
+
+      <!-- List Container -->
+      <div
+        id="configsGrid"
+        class="flex flex-col gap-4"
+      >
+        <!-- Inyectado vía JS -->
+      </div>
+    </main>
+
+    <!-- Modal Administrativo -->
+    <div
+      id="configModal"
+      class="fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-200 opacity-0 pointer-events-none"
+    >
+      <!-- Backdrop -->
+      <div
+        class="absolute inset-0 bg-black/60 backdrop-blur-[2px]"
+        onclick="closeModal()"
+      ></div>
+
+      <!-- Dialog -->
+      <div
+        id="configModalDialog"
+        class="bg-themeBg-surface relative z-10 rounded-2xl shadow-floating w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden text-left transition-transform duration-200 scale-95"
+      >
+        <div
+          class="px-6 py-4 border-b border-themeBorder-light flex justify-between items-center bg-white"
+        >
+          <h3
+            id="modalTitle"
+            class="text-base leading-6 font-semibold font-display text-themeText-primary"
+          >
+            Crear Enrutador
+          </h3>
+          <button
+            onclick="closeModal()"
+            class="text-themeText-tertiary hover:text-themeText-primary transition-colors"
+          >
+            <svg
+              class="h-5 w-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              ></path>
+            </svg>
+          </button>
+        </div>
+
+        <div class="px-6 py-5 overflow-y-auto flex-1 bg-white">
+          <form id="configForm" onsubmit="saveConfig(event)" class="space-y-5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <div>
+                <label class="block text-[13px] font-medium text-themeText-primary"
+                  >Nombre del Agente</label
+                >
+                <div class="mt-1.5">
+                  <input
+                    type="text"
+                    id="agentName"
+                    class="block w-full text-[13px] border-themeBorder-medium rounded-lg py-2 px-3 border outline-none focus:border-brand-primary focus:ring-4 focus:ring-themeBorder-focus transition-all duration-200 bg-white shadow-sm"
+                    placeholder="Ej. Soporte Ventas"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-[13px] font-medium text-themeText-primary"
+                  >Phone Number ID (Bot de Meta)</label
+                >
+                <div class="mt-1.5">
+                  <input
+                    type="text"
+                    id="botId"
+                    required
+                    class="block w-full text-[13px] border-themeBorder-medium rounded-lg py-2 px-3 border outline-none focus:border-brand-primary focus:ring-4 focus:ring-themeBorder-focus transition-all duration-200 bg-white shadow-sm"
+                    placeholder="Ej. 123456789012345"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-[13px] font-medium text-themeText-primary"
+                >URL Webhook Producción</label
+              >
+              <div class="mt-1.5">
+                <input
+                  type="url"
+                  id="prodWebhook"
+                  required
+                  class="block w-full text-[13px] border-themeBorder-medium rounded-lg py-2 px-3 border outline-none focus:border-brand-primary focus:ring-4 focus:ring-themeBorder-focus transition-all duration-200 bg-white shadow-sm"
+                  placeholder="https://api.miproduccion.com/whatsapp"
+                />
+              </div>
+            </div>
+
+            <div class="pt-5 border-t border-themeBorder-light mt-2">
+              <div class="flex justify-between items-center mb-2">
+                <label class="block text-[13px] font-medium text-themeText-primary"
+                  >Reglas de Desarrollo (Opcional)</label
+                >
+                <button
+                  type="button"
+                  onclick="addDevUser()"
+                  class="inline-flex items-center justify-center transition-all duration-200 cursor-pointer font-body text-[11px] font-medium leading-relaxed px-4 py-1.5 rounded-full bg-transparent hover:bg-themeBg-default active:bg-themeBorder-light text-themeText-primary border border-themeBorder-medium"
+                >
+                  Añadir Desarrollador
+                </button>
+              </div>
+              <p class="text-[11px] text-themeText-secondary mb-4">
+                Si el remitente coincide con uno de estos números,
+                se ruteará a la URL definida aquí en lugar de Producción.
+              </p>
+
+              <div id="devUsersContainer" class="space-y-3">
+                <!-- Dev items inyectados -->
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div
+          class="px-6 py-4 border-t border-themeBorder-light bg-themeBg-default flex justify-end gap-3"
+        >
+          <button
+            type="button"
+            onclick="closeModal()"
+            class="inline-flex items-center justify-center transition-all duration-200 cursor-pointer font-body text-xs font-semibold leading-relaxed px-6 py-2.5 rounded-full bg-transparent hover:bg-themeBg-default active:bg-themeBorder-light text-themeText-primary border border-themeBorder-medium"
+          >
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            form="configForm"
+            class="inline-flex items-center justify-center transition-all duration-200 cursor-pointer font-body text-xs font-medium leading-relaxed px-6 py-2.5 rounded-full bg-brand-primary hover:bg-brand-primaryHover active:bg-brand-primaryActive text-themeText-inverse shadow-md hover:-translate-y-[1px] active:translate-y-0"
+          >
+            Guardar Enrutador
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const API_URL = 'http://localhost:3000/proxy/config';
+      let devUsersCount = 0;
+
+      async function loadConfigs() {
+        try {
+          const response = await fetch(API_URL);
+          const data = await response.json();
+          renderGrid(data.configs);
+        } catch (e) {
+          console.error('Error cargando configs', e);
+        }
+      }
+
+      function toggleDevs(id) {
+        const devContainer = document.getElementById(`devs-${id}`);
+        const chevron = document.getElementById(`chevron-${id}`);
+        if(devContainer.classList.contains('hidden')) {
+           devContainer.classList.remove('hidden');
+           chevron.classList.add('rotate-180');
+        } else {
+           devContainer.classList.add('hidden');
+           chevron.classList.remove('rotate-180');
+        }
+      }
+
+      function renderGrid(configsObj) {
+        const grid = document.getElementById('configsGrid');
+        grid.innerHTML = '';
+
+        const keys = Object.keys(configsObj);
+        if (keys.length === 0) {
+          grid.innerHTML = `
+          <div class="border border-dashed border-themeBorder-medium rounded-2xl bg-white p-12 text-center shadow-sm">
+            <svg class="mx-auto h-10 w-10 text-themeText-tertiary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            </svg>
+            <h3 class="mt-3 text-[13px] font-semibold text-themeText-primary">Sin enrutadores configurados</h3>
+            <p class="mt-1 text-[12px] text-themeText-secondary">Comienza añadiendo una regla de enrutamiento para tu bot.</p>
+            <div class="mt-6">
+              <button onclick="openModal()" class="inline-flex items-center justify-center transition-all duration-200 cursor-pointer font-body text-xs font-medium leading-relaxed px-6 py-2.5 rounded-full bg-brand-primary hover:bg-brand-primaryHover active:bg-brand-primaryActive text-themeText-inverse shadow-md hover:-translate-y-[1px] active:translate-y-0">
+                <svg class="-ml-1 mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                Nuevo Enrutador
+              </button>
+            </div>
+          </div>
+        `;
+          return;
+        }
+
+        keys.forEach((phoneNumberId) => {
+          const config = configsObj[phoneNumberId];
+          const prodRaw = config.url_webhook_prod || '';
+          const devCount = config.dev_users?.length || 0;
+
+          const card = document.createElement('div');
+          card.className =
+            'bg-white shadow-sm border border-themeBorder-light rounded-2xl flex flex-col hover:shadow-md transition-shadow duration-200';
+          card.innerHTML = `
+          <div class="px-5 py-4">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div class="flex items-center gap-4 shrink-0">
+                <div class="bg-blue-50 p-2.5 rounded-xl border border-themeBorder-focus/30">
+                  <svg class="w-5 h-5 text-brand-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+                </div>
+                <div>
+                  <h3 class="text-[15px] leading-tight font-semibold text-themeText-primary font-display">${config.agent_name || 'Agente sin nombre'}</h3>
+                  <div class="flex items-center gap-2 mt-0.5">
+                    <span class="text-[12px] font-mono text-themeText-secondary bg-themeBg-default px-1.5 py-0.5 rounded border border-themeBorder-light">${phoneNumberId}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="hidden md:flex flex-1 max-w-xl mx-6 flex-col">
+                 <div class="flex items-center gap-2 mb-1">
+                   <span class="inline-flex items-center rounded-md bg-green-50 px-1.5 py-0.5 text-[10px] font-semibold text-green-700 ring-1 ring-inset ring-green-600/20">PROD</span>
+                 </div>
+                 <p class="text-[12px] font-mono text-themeText-secondary truncate" title="${prodRaw}">${prodRaw}</p>
+              </div>
+
+              <div class="flex gap-2 items-center justify-between md:justify-end shrink-0">
+                <button onclick="toggleDevs('${phoneNumberId}')" class="text-[12px] font-medium px-4 py-2 rounded-full border border-themeBorder-medium hover:bg-themeBg-default text-themeText-primary flex items-center gap-2 transition-colors">
+                   Testers <span class="bg-brand-primary text-white px-1.5 rounded-full text-[10px]">${devCount}</span>
+                  <svg id="chevron-${phoneNumberId}" class="w-3.5 h-3.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </button>
+
+                <div class="hidden md:block h-6 w-px bg-themeBorder-light mx-2"></div>
+
+                <div class="flex gap-1.5">
+                  <button onclick="editConfig('${phoneNumberId}')" class="p-2 text-themeText-tertiary hover:text-brand-primary transition-colors hover:bg-blue-50 rounded-lg" title="Editar">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                  </button>
+                  <button onclick="deleteConfig('${phoneNumberId}')" class="p-2 text-themeText-tertiary hover:text-red-500 transition-colors hover:bg-red-50 rounded-lg" title="Eliminar">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Mobile Prod Webhook (visible only on small) -->
+            <div class="md:hidden mt-4 pt-3 border-t border-themeBorder-light flex flex-col gap-1">
+               <span class="inline-flex items-center rounded-md bg-green-50 px-1.5 py-0.5 text-[10px] font-semibold text-green-700 ring-1 ring-inset ring-green-600/20 w-max">PROD</span>
+               <p class="text-[11px] font-mono text-themeText-secondary break-all bg-themeBg-default p-2 rounded-lg border border-themeBorder-light">${prodRaw}</p>
+            </div>
+          </div>
+
+          <!-- Dev Users Accordion -->
+          <div id="devs-${phoneNumberId}" class="hidden bg-themeBg-default border-t border-themeBorder-light px-5 py-4 rounded-b-2xl">
+             <h4 class="text-[11px] font-bold text-themeText-primary uppercase tracking-wider mb-3 flex items-center gap-2">
+                <svg class="w-3.5 h-3.5 text-brand-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                Rutas de Desarrollo (Testers)
+             </h4>
+             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+               ${(config.dev_users || []).map(dev => `
+                  <div class="bg-white border border-themeBorder-light p-3 rounded-xl shadow-sm flex items-center gap-3">
+                     <span class="w-2.5 h-2.5 rounded-full bg-yellow-400 shrink-0"></span>
+                     <div class="flex flex-col flex-1 overflow-hidden">
+                        <span class="text-[12px] font-bold text-themeText-primary shrink-0">${dev.phone_number}</span>
+                        <p class="text-[11px] font-mono text-themeText-secondary truncate mt-0.5" title="${dev.url_webhook}">${dev.url_webhook}</p>
+                     </div>
+                  </div>
+               `).join('')}
+             </div>
+             ${(!config.dev_users || config.dev_users.length === 0) ? '<p class="text-[12px] text-themeText-tertiary italic">No hay testers asignados a este bot.</p>' : ''}
+          </div>
+        `;
+          grid.appendChild(card);
+        });
+      }
+
+      function openModal() {
+        document.getElementById('configForm').reset();
+        document.getElementById('devUsersContainer').innerHTML = '';
+        devUsersCount = 0;
+        document.getElementById('botId').readOnly = false;
+        document
+          .getElementById('botId')
+          .classList.remove('bg-gray-100', 'text-gray-500', 'opacity-70');
+        document.getElementById('modalTitle').innerText = 'Crear Enrutador';
+
+        const modal = document.getElementById('configModal');
+        const dialog = document.getElementById('configModalDialog');
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        modal.classList.add('opacity-100', 'pointer-events-auto');
+        dialog.classList.remove('scale-95');
+        dialog.classList.add('scale-100');
+      }
+
+      function closeModal() {
+        const modal = document.getElementById('configModal');
+        const dialog = document.getElementById('configModalDialog');
+        modal.classList.remove(
+          'opacity-100',
+          'pointer-events-auto'
+        );
+        modal.classList.add('opacity-0', 'pointer-events-none');
+        dialog.classList.remove('scale-100');
+        dialog.classList.add('scale-95');
+      }
+
+      function addDevUser(phone = '', url = '') {
+        const container = document.getElementById('devUsersContainer');
+        const idx = devUsersCount++;
+        const el = document.createElement('div');
+        el.id = `dev-${idx}`;
+        el.className =
+          'flex items-start gap-3 bg-white p-3 rounded-xl border border-themeBorder-light relative shadow-sm';
+        el.innerHTML = `
+        <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div>
+            <input type="text" name="dev_phone_number" value="${phone}" required placeholder="Nro Celular" class="block w-full text-[12px] border-themeBorder-medium rounded-lg py-1.5 px-2.5 border outline-none focus:border-brand-primary focus:ring-4 focus:ring-themeBorder-focus transition-all duration-200 bg-white">
+          </div>
+          <div>
+            <input type="url" name="dev_url_webhook" value="${url}" required placeholder="URL Webhook" class="block w-full text-[12px] border-themeBorder-medium rounded-lg py-1.5 px-2.5 border outline-none focus:border-brand-primary focus:ring-4 focus:ring-themeBorder-focus transition-all duration-200 bg-white">
+          </div>
+        </div>
+        <button type="button" onclick="document.getElementById('dev-${idx}').remove()" class="text-themeText-tertiary hover:text-red-500 pt-1 transition-colors">
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      `;
+        container.appendChild(el);
+      }
+
+      async function saveConfig(e) {
+        e.preventDefault();
+        const botId = document.getElementById('botId').value;
+        const agentName = document.getElementById('agentName').value;
+        const prodWebhook = document.getElementById('prodWebhook').value;
+
+        const devPhones = document.getElementsByName('dev_phone_number');
+        const devUrls = document.getElementsByName('dev_url_webhook');
+        const dev_users = [];
+
+        for (let i = 0; i < devPhones.length; i++) {
+          if (devPhones[i].value && devUrls[i].value) {
+            dev_users.push({
+              phone_number: devPhones[i].value,
+              url_webhook: devUrls[i].value,
+            });
+          }
+        }
+
+        const payload = {
+          agent_name: agentName,
+          url_webhook_prod: prodWebhook,
+          dev_users,
+        };
+
+        try {
+          const btn = document.querySelector('button[form="configForm"]');
+          const oldText = btn.innerHTML;
+          btn.innerHTML = 'Guardando...';
+          btn.disabled = true;
+
+          await fetch(`${API_URL}/${botId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+
+          btn.innerHTML = oldText;
+          btn.disabled = false;
+          closeModal();
+          loadConfigs();
+        } catch (err) {
+          alert('Error guardando configuración');
+          console.error(err);
+        }
+      }
+
+      async function deleteConfig(id) {
+        if (
+          confirm(
+            `¿Estás seguro de eliminar el bot ${id}? Esta acción no se puede deshacer.`,
+          )
+        ) {
+          await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+          loadConfigs();
+        }
+      }
+
+      async function editConfig(id) {
+        openModal();
+        document.getElementById('modalTitle').innerText =
+          'Editar Regla de ' + id;
+        document.getElementById('botId').value = id;
+        document.getElementById('botId').readOnly = true;
+        document
+          .getElementById('botId')
+          .classList.add('bg-gray-100', 'text-gray-500', 'opacity-70');
+
+        try {
+          const res = await fetch(`${API_URL}/${id}`);
+          const data = await res.json();
+          if (data.config) {
+            document.getElementById('agentName').value = data.config.agent_name || '';
+            document.getElementById('prodWebhook').value =
+              data.config.url_webhook_prod || '';
+            if (data.config.dev_users) {
+              data.config.dev_users.forEach((d) =>
+                addDevUser(d.phone_number, d.url_webhook),
+              );
+            }
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      loadConfigs();
+    </script>
+  </body>
+</html>
