@@ -144,8 +144,10 @@ export class ProxyService {
       return { forwarded: false, destination: '', type: 'none' };
     }
 
-    // Determinar si es un usuario de desarrollo
-    const senderNumber = value?.messages?.[0]?.from;
+    // Determinar si es un usuario de desarrollo (remitente del mensaje o destinatario del estado)
+    const senderNumber =
+      value?.messages?.[0]?.from ||
+      value?.statuses?.[0]?.recipient_id;
 
     let targetUrl = config.url_webhook_prod;
     let routeType: 'dev' | 'prod' = 'prod';
