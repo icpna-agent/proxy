@@ -27,10 +27,9 @@ export class ProxyService {
   }
 
   async getAllConfigs(): Promise<Record<string, PhoneConfig>> {
-    const configs =
-      await this.cacheManager.get<Record<string, PhoneConfig>>(
-        this.configCacheKey,
-      );
+    const configs = await this.cacheManager.get<Record<string, PhoneConfig>>(
+      this.configCacheKey,
+    );
     return configs ?? {};
   }
 
@@ -48,7 +47,9 @@ export class ProxyService {
     const allConfigs = await this.getAllConfigs();
     allConfigs[phoneNumberId] = config;
     await this.cacheManager.set(this.configCacheKey, allConfigs, 0);
-    this.logger.log(`Config guardada para phone_number_id: ${phoneNumberId} → prod: ${config.url_webhook_prod}, dev_users: ${config.dev_users.length}`);
+    this.logger.log(
+      `Config guardada para phone_number_id: ${phoneNumberId} → prod: ${config.url_webhook_prod}, dev_users: ${config.dev_users.length}`,
+    );
   }
 
   async deletePhoneConfig(phoneNumberId: string): Promise<boolean> {
@@ -77,7 +78,6 @@ export class ProxyService {
   }
 
   receiveWebhook(payload: Meta): ReceiveWebhookResponseDto {
-
     this.forwardWebhook(payload).catch((err) => {
       this.logger.error('Error en forwardWebhook:', err);
     });
@@ -85,7 +85,10 @@ export class ProxyService {
     return { status: 'received' };
   }
 
-  async setConfig(phoneNumberId: string, config: PhoneConfigBodyDto): Promise<SetConfigResponseDto> {
+  async setConfig(
+    phoneNumberId: string,
+    config: PhoneConfigBodyDto,
+  ): Promise<SetConfigResponseDto> {
     await this.setPhoneConfig(phoneNumberId, config);
     return {
       message: `Configuración guardada para ${phoneNumberId}`,
@@ -98,7 +101,9 @@ export class ProxyService {
     return { configs };
   }
 
-  async getConfigResponse(phoneNumberId: string): Promise<GetConfigResponseDto> {
+  async getConfigResponse(
+    phoneNumberId: string,
+  ): Promise<GetConfigResponseDto> {
     const config = await this.getPhoneConfig(phoneNumberId);
     if (!config) {
       return {
@@ -109,7 +114,9 @@ export class ProxyService {
     return { config };
   }
 
-  async deleteConfigResponse(phoneNumberId: string): Promise<DeleteConfigResponseDto> {
+  async deleteConfigResponse(
+    phoneNumberId: string,
+  ): Promise<DeleteConfigResponseDto> {
     const deleted = await this.deletePhoneConfig(phoneNumberId);
     return {
       message: deleted
@@ -124,6 +131,15 @@ export class ProxyService {
     destination: string;
     type: 'dev' | 'prod' | 'none';
   }> {
+    const hasMessage = payload.entry?.some((entry) =>
+      entry.changes?.some((change) => Boolean(change.value?.messages?.length)),
+    );
+
+    if (!hasMessage) {
+      this.logger.log('Webhook sin mensajes entrantes, ignorando');
+      return { forwarded: false, destination: '', type: 'none' };
+    }
+
     // Extraer info del payload
     const entry = payload.entry?.[0];
     const change = entry?.changes?.[0];
@@ -140,14 +156,14 @@ export class ProxyService {
     const config = await this.getPhoneConfig(phoneNumberId);
 
     if (!config) {
-      this.logger.warn(`No hay configuración para phone_number_id: ${phoneNumberId}`);
+      this.logger.warn(
+        `No hay configuración para phone_number_id: ${phoneNumberId}`,
+      );
       return { forwarded: false, destination: '', type: 'none' };
     }
 
-    // Determinar si es un usuario de desarrollo (remitente del mensaje o destinatario del estado)
-    const senderNumber =
-      value?.messages?.[0]?.from ||
-      value?.statuses?.[0]?.recipient_id;
+    // Determinar si el remitente es un usuario de desarrollo
+    const senderNumber = value?.messages?.[0]?.from;
 
     let targetUrl = config.url_webhook_prod;
     let routeType: 'dev' | 'prod' = 'prod';
@@ -159,7 +175,9 @@ export class ProxyService {
       if (devUser) {
         targetUrl = devUser.url_webhook;
         routeType = 'dev';
-        this.logger.log(`🔧 DEV match: ${senderNumber} → ${devUser.url_webhook}`);
+        this.logger.log(
+          `🔧 DEV match: ${senderNumber} → ${devUser.url_webhook}`,
+        );
       }
     }
 
